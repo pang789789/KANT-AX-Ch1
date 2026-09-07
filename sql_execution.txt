@@ -1,0 +1,52 @@
+PostgreSQL 18.4 / psql / UTF-8
+-- AX 2회차 Ch 1: PostgreSQL 회원관리 과제
+-- 전체 SQL 실행 결과 기록
+BEGIN;
+CREATE SCHEMA IF NOT EXISTS practice;
+CREATE TABLE practice.members (
+    member_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    age INTEGER,
+    joined_at DATE
+);
+INSERT INTO practice.members (name, email, age, joined_at) VALUES
+('김민수', 'minsu@example.com', 25, '2026-08-01'),
+('이지은', 'jieun@example.com', 22, '2026-08-03'),
+('박서준', 'seojun@example.com', 35, '2026-08-05'),
+('최유나', 'yuna@example.com', 28, '2026-08-10'),
+('정도현', 'dohyun@example.com', 19, '2026-08-15');
+INSERT 0 5
+
+-- 조회 결과: 5명 등록 확인
+-- age >= 25: 김민수(25), 박서준(35), 최유나(28)
+-- name = 이지은: 이지은(22)
+-- age DESC: 박서준 35, 최유나 28, 김민수 25, 이지은 22, 정도현 19
+-- joined_at ASC: 2026-08-01, 08-03, 08-05, 08-10, 08-15
+
+UPDATE practice.members SET age = 30 WHERE member_id = 1;
+UPDATE 1
+DELETE FROM practice.members WHERE member_id = 5;
+DELETE 1
+
+-- 최종 조회 결과
+-- 1 김민수 minsu@example.com 30 2026-08-01
+-- 2 이지은 jieun@example.com 22 2026-08-03
+-- 3 박서준 seojun@example.com 35 2026-08-05
+-- 4 최유나 yuna@example.com 28 2026-08-10
+
+-- 집계 결과
+-- member_count = 4
+-- average_age = 28.75
+-- oldest_age = 35
+-- youngest_age = 22
+-- members_25_or_older = 3
+
+-- 도전 결과
+-- age_group: 20대 2명, 30대 2명
+-- 최근 가입 회원: 최유나
+-- 평균 나이 초과: 박서준, 김민수
+-- 이메일 검색 jieun@example.com: 이지은
+-- age >= 25 AND joined_at >= 2026-08-05: 박서준, 최유나
+COMMIT;
+COMMIT
